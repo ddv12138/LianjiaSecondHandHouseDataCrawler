@@ -1,0 +1,26 @@
+package ORM;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+public class SqlliteSqlSessionFactoryBuilder {
+	String resource = "ORM/mybatis-config.xml";
+	InputStream inputStream = Resources.getResourceAsStream(resource);
+	SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+	static SqlliteSqlSessionFactoryBuilder builder;
+
+	static {
+		try {
+			builder = new SqlliteSqlSessionFactoryBuilder();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private SqlliteSqlSessionFactoryBuilder() throws IOException {
+	}
+}
