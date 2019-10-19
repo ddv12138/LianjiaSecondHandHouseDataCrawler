@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.mybatis.HouseMapper">
-    <select id="createHouseDeatilTable" parameterType="String">
+<mapper namespace="ORM.Mapper.HouseDAO">
+    <select id="createTable" parameterType="java.lang.String">
         create table ${tableName} (
             houseId PRIMARY  KEY
             , houseCode, title, appid, source, imgSrc, layoutImgSrc, imgSrcUri,

@@ -3,16 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <settings>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="org.sqlite.JDBC"/>
-                <property name="url" value="jdbc:sqlite:./src/main/resources/DATA/test.db"/>
+                <property name="url" value="jdbc:sqlite:./test.db"/>
             </dataSource>
         </environment>
     </environments>
     <mappers>
-        <mapper resource="ORM/HouseDetailMapper"></mapper>
+        <mapper resource="ORM/Mapper/HouseDetailMapper.xml"></mapper>
     </mappers>
 </configuration>

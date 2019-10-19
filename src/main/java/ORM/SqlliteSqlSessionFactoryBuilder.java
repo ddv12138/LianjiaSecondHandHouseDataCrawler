@@ -1,6 +1,7 @@
 package ORM;
 
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
@@ -22,5 +23,9 @@ public class SqlliteSqlSessionFactoryBuilder {
 	}
 
 	private SqlliteSqlSessionFactoryBuilder() throws IOException {
+	}
+
+	public static SqlSession getSession() {
+		return builder.sqlSessionFactory.openSession();
 	}
 }

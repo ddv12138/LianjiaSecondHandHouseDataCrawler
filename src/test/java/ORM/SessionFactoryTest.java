@@ -1,5 +1,6 @@
 package ORM;
 
+import ORM.Service.HouseService;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +12,11 @@ public class SessionFactoryTest {
 	private static final Logger logger= LogManager.getLogger(SessionFactoryTest.class);
 	@Test
 	public void getSqlSessionTest(){
-		SqlSessionFactory factory =  SqlliteSqlSessionFactoryBuilder.builder.sqlSessionFactory;
-		SqlSession session = factory.openSession();
-		logger.info(session.selectOne("org.mybatis.HouseMapper.createHouseDeatilTable","house").toString());
+		HouseService service = new HouseService();
+		try {
+			service.createTable("house");
+		} catch (Exception e) {
+			logger.info("数据表已存在");
+		}
 	}
 }
