@@ -5,7 +5,7 @@
 <Configuration status="INFO" monitorInterval="30">
     <Properties>
         <!-- 配置日志文件输出目录 ${sys:user.home} -->
-        <Property name="LOG_HOME">D:/logs</Property>
+        <Property name="LOG_HOME">./logs</Property>
         <property name="ERROR_LOG_FILE_NAME">./logs</property>
         <property name="WARN_LOG_FILE_NAME">./logs</property>
 
