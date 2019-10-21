@@ -98,7 +98,7 @@ public class DistrictService implements DistrictMapper {
 			district.setCity_id(city.getCity_id());
 			district.setCity_name(city.getCity_name());
 			districtList.add(district);
-			logger.info("处理行政区划数据: " + district.toString());
+			logger.info("处理行政区划数据: " + district.getCity_name() + "-" + district.getName());
 		}
 		DistrictService districtService = new DistrictService();
 		return districtService.bathInsertList(districtList);
