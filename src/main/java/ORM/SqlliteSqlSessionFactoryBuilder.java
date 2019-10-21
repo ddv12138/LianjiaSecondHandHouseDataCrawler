@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class SqlliteSqlSessionFactoryBuilder {
-	String resource = "ORM/mybatis-config.xml";
-	InputStream inputStream = Resources.getResourceAsStream(resource);
-	SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 	static SqlliteSqlSessionFactoryBuilder builder;
 
 	static {
@@ -21,6 +18,10 @@ public class SqlliteSqlSessionFactoryBuilder {
 			e.printStackTrace();
 		}
 	}
+
+	String resource = "ORM/mybatis-config.xml";
+	InputStream inputStream = Resources.getResourceAsStream(resource);
+	SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
 
 	private SqlliteSqlSessionFactoryBuilder() throws IOException {
 	}

@@ -5,18 +5,21 @@
 <configuration>
     <settings>
         <!-- 打印查询语句 -->
-        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!--<setting name="logImpl" value="LOG4J2"/>-->
+        <setting name="logImpl" value="NO_LOGGING"/>
     </settings>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="org.sqlite.JDBC"/>
-                <property name="url" value="jdbc:sqlite:./test.db"/>
+                <property name="url" value="jdbc:sqlite:./lianjia.db"/>
             </dataSource>
         </environment>
     </environments>
     <mappers>
-        <mapper resource="ORM/Mapper/HouseDetailMapper.xml"></mapper>
+        <mapper resource="ORM/Mapper/HouseMapper.xml"></mapper>
+        <mapper resource="ORM/Mapper/CityMapper.xml"></mapper>
+        <mapper resource="ORM/Mapper/DistrictMapper.xml"></mapper>
     </mappers>
 </configuration>

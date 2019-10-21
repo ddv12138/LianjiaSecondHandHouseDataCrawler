@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ORM.Mapper.DistrictMapper">
+    <select id="createTable">
+        create table if not exists District
+        (
+            id PRIMARY KEY,
+            name,
+            longitude,
+            latitude,
+            border,
+            unit_price,
+            count,
+            city_id,
+            city_name
+        );
+    </select>
+    <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="false">
+        insert or ignore into District(
+        id ,
+        name,
+        longitude,
+        latitude,
+        border,
+        unit_price,
+        count,
+        city_id,
+        city_name) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.longitude},#{item.latitude},#{item.border},#{item.unit_price},#{item.count},#{item.city_id},#{item.city_name})
+        </foreach>
+    </insert>
+</mapper>

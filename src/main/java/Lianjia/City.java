@@ -1,8 +1,5 @@
 package Lianjia;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 public class City {
 
 	String city_id, city_name, max_lat, min_lat, max_lng, min_lng;

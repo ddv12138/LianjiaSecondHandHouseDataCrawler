@@ -12,5 +12,4 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 /logs/
 /logs/*
-/test.db
-/test.db-journal
+/lianjia.db
