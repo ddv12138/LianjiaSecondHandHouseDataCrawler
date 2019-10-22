@@ -1,30 +1,38 @@
 package Lianjia;
 
 public class Community {
-	int id, district_id, city_id, unit_price, count;
-	String name, district_name, longitude, latitude;
+	int unit_price, count;
+	String name, district_name, city_name, longitude, latitude, id, district_id, city_id;
 
-	public int getId() {
+	public String getCity_name() {
+		return city_name;
+	}
+
+	public void setCity_name(String city_name) {
+		this.city_name = city_name;
+	}
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public int getDistrict_id() {
+	public String getDistrict_id() {
 		return district_id;
 	}
 
-	public void setDistrict_id(int district_id) {
+	public void setDistrict_id(String district_id) {
 		this.district_id = district_id;
 	}
 
-	public int getCity_id() {
+	public String getCity_id() {
 		return city_id;
 	}
 
-	public void setCity_id(int city_id) {
+	public void setCity_id(String city_id) {
 		this.city_id = city_id;
 	}
 

@@ -13,16 +13,17 @@
             count,
             name,
             district_name,
+            city_name,
             longitude,
             latitude
         );
     </select>
     <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="false">
         insert or replace into Community(
-        id,district_id, city_id, unit_price, count,name, district_name, longitude, latitude) values
+        id,district_id, city_id, unit_price, count,name, district_name, longitude, latitude,city_name) values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.id},#{item.district_id},#{item.city_id},#{item.unit_price}
-            ,#{item.count},#{item.name},#{item.district_name},#{item.longitude},#{item.latitude})
+            ,#{item.count},#{item.name},#{item.district_name},#{item.longitude},#{item.latitude},#{item.city_name})
         </foreach>
     </insert>
 </mapper>

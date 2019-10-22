@@ -88,10 +88,7 @@ public class DistrictService implements DistrictMapper {
 	}
 
 	private int insertDistrictData(City city, JSONObject res) {
-		if (null == res || res.isEmpty() || res.getIntValue("errno") != 0) {
-			if (null != res && !res.isEmpty()) CommonUtils.Logger().error(res.getString("error"));
-			throw new RuntimeException("请求失败，返回结果无效");
-		}
+		if (!CommonUtils.JSONResultCheck(res)) return -1;
 		Map<String, JSONObject> districts = res.getJSONObject("data").getObject("list", Map.class);
 		List<District> districtList = new LinkedList<>();
 		for (String district_id : districts.keySet()) {
@@ -105,4 +102,14 @@ public class DistrictService implements DistrictMapper {
 		return districtService.bathInsertList(districtList);
 	}
 
+	@Override
+	public District selectByName(String name) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			DistrictMapper mapper = session.getMapper(DistrictMapper.class);
+			return mapper.selectByName(name);
+		} catch (Exception e) {
+			CommonUtils.Logger().error("查询失败，数据表可能不存在");
+			throw e;
+		}
+	}
 }

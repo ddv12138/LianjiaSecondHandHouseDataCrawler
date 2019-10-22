@@ -8,4 +8,6 @@ public interface DistrictMapper {
 	void createTable();
 
 	int bathInsertList(List<District> districts);
+
+	District selectByName(String name);
 }

@@ -1,5 +1,6 @@
 package Utils;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -105,5 +106,15 @@ public class CommonUtils {
 			start = start.add(step);
 		} while (start.compareTo(end) < 0);
 		return res;
+	}
+
+	public static boolean JSONResultCheck(JSONObject res) {
+		if (null == res || res.isEmpty() || res.getIntValue("errno") != 0) {
+			if (null != res && !res.isEmpty()) {
+				CommonUtils.Logger().error(res.getString("error"));
+			}
+			return false;
+		}
+		return true;
 	}
 }
