@@ -1,19 +1,14 @@
 package Utils;
 
-import Lianjia.Community;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -73,12 +68,12 @@ public class CommonUtils {
 		return md5code;
 	}
 
-	public static String postHTTPRequest(String linkurl) {
+	public static String postHTTPRequest(String linkUrl) {
 		HttpURLConnection connection = null;
 		try {
-			URL url = new URL(linkurl);
-			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
-			connection = (HttpURLConnection) url.openConnection(proxy);
+			URL url = new URL(linkUrl);
+//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
+			connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");
@@ -94,7 +89,7 @@ public class CommonUtils {
 			if (connection.getResponseCode() == 200) {
 				try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 					StringBuffer sb = new StringBuffer();
-					String tmp = null;
+					String tmp;
 					while (null != (tmp = br.readLine())) {
 						sb.append(tmp);
 					}

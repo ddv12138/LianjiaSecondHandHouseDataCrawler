@@ -11,7 +11,6 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
 import java.util.*;
 
 public class CommunityService implements CommunityMapper {
@@ -30,6 +29,7 @@ public class CommunityService implements CommunityMapper {
 
 	@Override
 	public int bathInsertList(List<Community> communities) {
+		if (communities.isEmpty()) return -1;
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
 			int res = mapper.bathInsertList(communities);
@@ -108,8 +108,13 @@ public class CommunityService implements CommunityMapper {
 		List<Community> communityList = new LinkedList<>();
 		try {
 			communityList = res.getJSONObject("data").getJSONArray("list").toJavaList(Community.class);
-			for (Community community : communityList) {
-				if (null != this.selectByName(community.getName())) continue;
+			Iterator<Community> it = communityList.iterator();
+			while (it.hasNext()) {
+				Community community = it.next();
+				if (null != this.selectByName(community.getName())) {
+					it.remove();
+					continue;
+				}
 				community.setCity_id(district.getCity_id());
 				community.setCity_name(district.getCity_name());
 				community.setDistrict_id(district.getId() + "");
