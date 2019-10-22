@@ -76,8 +76,8 @@ public class DistrictService implements DistrictMapper {
 				districtList.add(district);
 				CommonUtils.Logger().info("处理行政区划数据: " + district.getCity_name() + "-" + district.getName() + "-均价" + district.getUnit_price() + "-总计" + district.getCount() + "个");
 			}
-			DistrictService districtService = new DistrictService();
-			districtService.bathInsertList(districtList);
+			this.deleteByCityId(city.getCity_id());
+			this.bathInsertList(districtList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			CommonUtils.Logger().error(e);
@@ -90,6 +90,19 @@ public class DistrictService implements DistrictMapper {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			DistrictMapper mapper = session.getMapper(DistrictMapper.class);
 			return mapper.selectByName(name);
+		} catch (Exception e) {
+			CommonUtils.Logger().error("查询失败，数据表可能不存在");
+			throw e;
+		}
+	}
+
+	@Override
+	public int deleteByCityId(String city_id) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			DistrictMapper mapper = session.getMapper(DistrictMapper.class);
+			int count = mapper.deleteByCityId(city_id);
+			session.commit();
+			return count;
 		} catch (Exception e) {
 			CommonUtils.Logger().error("查询失败，数据表可能不存在");
 			throw e;

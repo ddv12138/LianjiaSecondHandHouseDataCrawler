@@ -38,4 +38,9 @@
         from District
         where name = #{name};
     </select>
+    <delete id="deleteByCityId" parameterType="String">
+        delete
+        from District
+        where city_id = #{city_id}
+    </delete>
 </mapper>

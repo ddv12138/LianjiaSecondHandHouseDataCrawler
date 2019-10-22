@@ -27,4 +27,10 @@
             ,#{item.count},#{item.name},#{item.district_name},#{item.longitude},#{item.latitude},#{item.city_name})
         </foreach>
     </insert>
+    <select id="selectByName" parameterType="String" resultType="Lianjia.Community">
+        select *
+        from Community
+        where name = #{name}
+        limit 1;
+    </select>
 </mapper>

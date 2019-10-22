@@ -36,9 +36,20 @@ public class CommunityService implements CommunityMapper {
 			session.commit();
 			return res;
 		} catch (Exception e) {
-			CommonUtils.Logger().error("创建表失败,表可能已经存在");
-			throw e;
+			CommonUtils.Logger().error(e);
 		}
+		return -1;
+	}
+
+	@Override
+	public Community selectByName(String name) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.selectByName(name);
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return null;
 	}
 
 	public void getCommunityData(District district) {
@@ -98,6 +109,7 @@ public class CommunityService implements CommunityMapper {
 		try {
 			communityList = res.getJSONObject("data").getJSONArray("list").toJavaList(Community.class);
 			for (Community community : communityList) {
+				if (null != this.selectByName(community.getName())) continue;
 				community.setCity_id(district.getCity_id());
 				community.setCity_name(district.getCity_name());
 				community.setDistrict_id(district.getId() + "");

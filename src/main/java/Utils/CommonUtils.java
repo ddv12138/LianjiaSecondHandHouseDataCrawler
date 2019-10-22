@@ -1,5 +1,7 @@
 package Utils;
 
+import Lianjia.Community;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +12,8 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -26,11 +30,11 @@ public class CommonUtils {
 			"ga=GA1.2.964691746.1534145946;" +
 			"gid=GA1.2.826685830.1534145946;" +
 			"UM_distinctid=165327625186a-029cf60b1994ee-3461790f-fa000-165327625199d3;" +
-			"select_city=310000;" +
+			"select_city=420100;" +
 			"lianjia_ssid=34fc4efa-7fcc-4f3f-82ae-010401f27aa8;" +
 			"_smt_uid=5b72c5f7.5815bcdf;" +
 			"Hm_lvt_9152f8221cb6243a53c83b956842be8a=1537530243;" +
-			"select_city=110000;_jzqc=1;" +
+			"select_city=420000;_jzqc=1;" +
 			"_gid=GA1.2.178601063.1541866763;" +
 			"_jzqb=1.2.10.1541866760.1";
 	static final HashMap<String, String> headers = new LinkedHashMap<>();
@@ -38,7 +42,7 @@ public class CommonUtils {
 	static {
 		headers.put("Host", "ajax.lianjia.com");
 		headers.put("Referer", "https://wh.lianjia.com/ditu/");
-		headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+		headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36");
 	}
 
 	public static final String url = "https://ajax.lianjia.com/map/search/ershoufang/?callback=jQuery1111012389114747347363_1534230881479"
@@ -69,20 +73,22 @@ public class CommonUtils {
 		return md5code;
 	}
 
-	public static String postHTTPRequest(String linkurl) throws IOException {
+	public static String postHTTPRequest(String linkurl) {
 		HttpURLConnection connection = null;
 		try {
 			URL url = new URL(linkurl);
-			connection = (HttpURLConnection) url.openConnection();
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
+			connection = (HttpURLConnection) url.openConnection(proxy);
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");
-			connection.setConnectTimeout(15000);
-			connection.setReadTimeout(60000);
+			connection.setConnectTimeout(5000);
+			connection.setReadTimeout(20000);
+			connection.setUseCaches(false);
 			for (String key : headers.keySet()) {
 				connection.setRequestProperty(key, headers.get(key));
 			}
-			connection.setRequestProperty("Cookie", cookie);
+//			connection.setRequestProperty("Cookie", cookie);
 			connection.connect();
 			String result = null;
 			if (connection.getResponseCode() == 200) {
@@ -96,11 +102,15 @@ public class CommonUtils {
 				}
 			}
 			return result.substring(result.indexOf("{"), result.lastIndexOf(")"));
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+			e.printStackTrace();
 		} finally {
 			if (null != connection) {
 				connection.disconnect();
 			}
 		}
+		return null;
 	}
 
 	public static String getAuthorization(HashMap dict) throws NoSuchAlgorithmException {
@@ -130,4 +140,5 @@ public class CommonUtils {
 		}
 		return true;
 	}
+
 }
