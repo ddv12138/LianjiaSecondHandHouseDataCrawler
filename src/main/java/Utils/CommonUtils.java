@@ -41,6 +41,19 @@ public class CommonUtils {
 		headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
 	}
 
+	public static final String url = "https://ajax.lianjia.com/map/search/ershoufang/?callback=jQuery1111012389114747347363_1534230881479"
+			+ "&city_id=%s"
+			+ "&group_type=%s"
+			+ "&max_lat=%s"
+			+ "&min_lat=%s"
+			+ "&max_lng=%s"
+			+ "&min_lng=%s"
+			+ "&filters=%s"
+			+ "&request_ts=%s"
+			+ "&source=ljpc"
+			+ "&authorization=%s"
+			+ "&_=%s";
+
 	public static Logger Logger() {
 		return LogManager.getRootLogger();
 	}

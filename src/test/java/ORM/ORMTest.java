@@ -31,7 +31,7 @@ public class ORMTest {
 	@Test
 	public void CommunityDataTest() {
 		DistrictService districtService = new DistrictService();
-		District district = districtService.selectByName("东湖高新");
+		District district = districtService.selectByName("青山");
 		CommunityService communityService = new CommunityService();
 		communityService.getCommunityData(district);
 	}

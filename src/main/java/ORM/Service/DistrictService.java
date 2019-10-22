@@ -21,19 +21,6 @@ public class DistrictService implements DistrictMapper {
 			+ "&source=ljpc"
 			+ "&authorization=%s"
 			+ "&_=%s";
-	static final String url = "https://ajax.lianjia.com/map/search/ershoufang/?callback=jQuery1111012389114747347363_1534230881479"
-			+ "&city_id=%s"
-			+ "&group_type=%s"
-			+ "&max_lat=%s"
-			+ "&min_lat=%s"
-			+ "&max_lng=%s"
-			+ "&min_lng=%s"
-			+ "&filters=%s"
-			+ "&request_ts=%s"
-			+ "&source=ljpc"
-			+ "&authorization=%s"
-			+ "&_=%s";
-
 	@Override
 	public void createTable() {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
@@ -50,7 +37,6 @@ public class DistrictService implements DistrictMapper {
 	public int bathInsertList(List<District> districts) {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			DistrictMapper mapper = session.getMapper(DistrictMapper.class);
-			mapper.createTable();
 			int res = mapper.bathInsertList(districts);
 			session.commit();
 			return res;
@@ -60,8 +46,8 @@ public class DistrictService implements DistrictMapper {
 		}
 	}
 
-	public int GetDistrictInfo(City city) {
-		JSONObject res = null;
+	public List<District> GetDistrictInfo(City city) {
+		List<District> districtList = new ArrayList<>();
 		try {
 			String time_13 = new Date().getTime() + "";
 			HashMap<String, String> dict = new LinkedHashMap<>();
@@ -73,33 +59,30 @@ public class DistrictService implements DistrictMapper {
 			dict.put("min_lng", city.getMin_lng());
 			dict.put("request_ts", time_13);
 			String authorization = CommonUtils.getAuthorization(dict);
-			String realUrl = String.format(url,
+			String realUrl = String.format(CommonUtils.url,
 					city.getCity_id(), dict.get("group_type"),
 					city.getMax_lat(), city.getMin_lat(),
 					city.getMax_lng(), city.getMin_lng(),
 					"%7B%7D", time_13,
 					authorization, time_13);
-			res = JSON.parseObject(CommonUtils.postHTTPRequest(realUrl));
+			JSONObject res = JSON.parseObject(CommonUtils.postHTTPRequest(realUrl));
+			if (!CommonUtils.JSONResultCheck(res)) return null;
+			Map<String, JSONObject> districts = res.getJSONObject("data").getObject("list", Map.class);
+			districtList = new LinkedList<>();
+			for (String district_id : districts.keySet()) {
+				District district = districts.get(district_id).toJavaObject(District.class);
+				district.setCity_id(city.getCity_id());
+				district.setCity_name(city.getCity_name());
+				districtList.add(district);
+				CommonUtils.Logger().info("处理行政区划数据: " + district.getCity_name() + "-" + district.getName() + "-均价" + district.getUnit_price() + "-总计" + district.getCount() + "个");
+			}
+			DistrictService districtService = new DistrictService();
+			districtService.bathInsertList(districtList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			CommonUtils.Logger().error(e);
 		}
-		return insertDistrictData(city, res);
-	}
-
-	private int insertDistrictData(City city, JSONObject res) {
-		if (!CommonUtils.JSONResultCheck(res)) return -1;
-		Map<String, JSONObject> districts = res.getJSONObject("data").getObject("list", Map.class);
-		List<District> districtList = new LinkedList<>();
-		for (String district_id : districts.keySet()) {
-			District district = districts.get(district_id).toJavaObject(District.class);
-			district.setCity_id(city.getCity_id());
-			district.setCity_name(city.getCity_name());
-			districtList.add(district);
-			CommonUtils.Logger().info("处理行政区划数据: " + district.getCity_name() + "-" + district.getName() + "-均价" + district.getUnit_price() + "-总计" + district.getCount() + "个");
-		}
-		DistrictService districtService = new DistrictService();
-		return districtService.bathInsertList(districtList);
+		return districtList;
 	}
 
 	@Override

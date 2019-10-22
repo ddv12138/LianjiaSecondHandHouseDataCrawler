@@ -1,7 +1,8 @@
 package Lianjia;
 
 public class District {
-	int id, count;
+	int uuid;
+	String id, count;
 	String border;
 	String latitude;
 	String longitude;
@@ -9,6 +10,30 @@ public class District {
 	String unit_price;
 	String city_id;
 	String city_name;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCount() {
+		return count;
+	}
+
+	public void setCount(String count) {
+		this.count = count;
+	}
+
+	public int getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(int uuid) {
+		this.uuid = uuid;
+	}
 
 	public String getCity_id() {
 		return city_id;
@@ -24,22 +49,6 @@ public class District {
 
 	public void setCity_name(String city_name) {
 		this.city_name = city_name;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public void setCount(int count) {
-		this.count = count;
 	}
 
 	public String getBorder() {

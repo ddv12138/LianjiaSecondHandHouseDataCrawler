@@ -1,8 +1,16 @@
 package Lianjia;
 
 public class Community {
-	int unit_price, count;
+	int unit_price, count, uuid;
 	String name, district_name, city_name, longitude, latitude, id, district_id, city_id;
+
+	public int getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(int uuid) {
+		this.uuid = uuid;
+	}
 
 	public String getCity_name() {
 		return city_name;

@@ -6,7 +6,8 @@
     <select id="createTable">
         create table if not exists District
         (
-            id PRIMARY KEY,
+            uuid integer primary key autoincrement,
+            id,
             name,
             longitude,
             latitude,
@@ -17,7 +18,7 @@
             city_name
         );
     </select>
-    <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="false">
+    <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="true">
         insert or replace into District(
         id ,
         name,

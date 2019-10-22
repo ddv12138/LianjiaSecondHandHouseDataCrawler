@@ -32,7 +32,6 @@ public class CommunityService implements CommunityMapper {
 	public int bathInsertList(List<Community> communities) {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-			mapper.createTable();
 			int res = mapper.bathInsertList(communities);
 			session.commit();
 			return res;
@@ -78,7 +77,7 @@ public class CommunityService implements CommunityMapper {
 				dict.put("min_lng", square[3].toString());
 				dict.put("request_ts", time_13);
 				String authorization = CommonUtils.getAuthorization(dict);
-				String realUrl = String.format(DistrictService.url,
+				String realUrl = String.format(CommonUtils.url,
 						district.getCity_id(), dict.get("group_type"),
 						square[0].toString(), square[1].toString(),
 						square[2].toString(), square[3].toString(),
@@ -106,7 +105,7 @@ public class CommunityService implements CommunityMapper {
 			}
 			return this.bathInsertList(communityList);
 		} catch (ClassCastException e) {
-			CommonUtils.Logger().error(e);
+			CommonUtils.Logger().trace(e);
 		}
 		Map<String, JSONObject> communityMap = res.getJSONObject("data").getJSONObject("list").toJavaObject(Map.class);
 		for (JSONObject communityObj : communityMap.values()) {

@@ -23,7 +23,6 @@ public class CityService implements CityMapper {
 	public int insert(City city) {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CityMapper mapper = session.getMapper(CityMapper.class);
-			mapper.createTable();
 			int res = mapper.insert(city);
 			session.commit();
 			return res;
@@ -37,7 +36,6 @@ public class CityService implements CityMapper {
 	public City selectByName(String city_name) {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CityMapper mapper = session.getMapper(CityMapper.class);
-			mapper.createTable();
 			City res = mapper.selectByName(city_name);
 			session.commit();
 			return res;
@@ -51,7 +49,6 @@ public class CityService implements CityMapper {
 	public int initDefaultData() {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CityMapper mapper = session.getMapper(CityMapper.class);
-			mapper.createTable();
 			int res = mapper.initDefaultData();
 			session.commit();
 			return res;
