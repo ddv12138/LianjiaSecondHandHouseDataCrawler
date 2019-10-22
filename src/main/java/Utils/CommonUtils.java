@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CommonUtils {
 	static final String cookie = "lianjia_uuid=9bdccc1a-7584-4639-ba95-b42cf21bbbc7;" +
@@ -30,12 +33,15 @@ public class CommonUtils {
 			"_gid=GA1.2.178601063.1541866763;" +
 			"_jzqb=1.2.10.1541866760.1";
 	static final HashMap<String, String> headers = new LinkedHashMap<>();
-	private static final Logger logger = LogManager.getLogger(CommonUtils.class);
 
 	static {
 		headers.put("Host", "ajax.lianjia.com");
 		headers.put("Referer", "https://wh.lianjia.com/ditu/");
 		headers.put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+	}
+
+	public static Logger Logger() {
+		return LogManager.getRootLogger();
 	}
 
 	public static String getMD5(String str) throws NoSuchAlgorithmException {
@@ -90,5 +96,14 @@ public class CommonUtils {
 				dict.get("city_id"), dict.get("group_type"), dict.get("max_lat"),
 				dict.get("max_lng"), dict.get("min_lat"), dict.get("min_lng"), dict.get("request_ts"));
 		return CommonUtils.getMD5(datastr);
+	}
+
+	public static List<BigDecimal> getStepRange(BigDecimal start, BigDecimal end, BigDecimal step) {
+		List<BigDecimal> res = new LinkedList<>();
+		do {
+			res.add(start);
+			start = start.add(step);
+		} while (start.compareTo(end) < 0);
+		return res;
 	}
 }

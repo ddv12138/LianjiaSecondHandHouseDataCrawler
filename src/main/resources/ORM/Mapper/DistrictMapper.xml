@@ -18,7 +18,7 @@
         );
     </select>
     <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="false">
-        insert or ignore into District(
+        insert or replace into District(
         id ,
         name,
         longitude,

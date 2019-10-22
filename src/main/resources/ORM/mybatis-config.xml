@@ -21,5 +21,6 @@
         <mapper resource="ORM/Mapper/HouseMapper.xml"></mapper>
         <mapper resource="ORM/Mapper/CityMapper.xml"></mapper>
         <mapper resource="ORM/Mapper/DistrictMapper.xml"></mapper>
+        <mapper resource="ORM/Mapper/CommunityMapper.xml"></mapper>
     </mappers>
 </configuration>

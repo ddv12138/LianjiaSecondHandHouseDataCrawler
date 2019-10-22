@@ -3,9 +3,12 @@ package ORM;
 import Lianjia.City;
 import ORM.Service.DistrictService;
 import Utils.CommonUtils;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
 
 public class UtilsTest {
 	private static final Logger logger = LogManager.getLogger(UtilsTest.class);
@@ -21,6 +24,7 @@ public class UtilsTest {
 	}
 
 	@Test
+	@Ignore
 	public void districtInfoTest() {
 		try {
 			City city = new City();
@@ -36,5 +40,14 @@ public class UtilsTest {
 			logger.error(e);
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void stepRangeTest() {
+		BigDecimal start = new BigDecimal("29.982801");
+		BigDecimal end = new BigDecimal("31.370301");
+		BigDecimal step = new BigDecimal("0.02");
+		logger.info(start);
+		logger.info(CommonUtils.getStepRange(start, end, step));
 	}
 }
