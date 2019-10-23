@@ -37,6 +37,7 @@ public class HouseService implements HouseMapper {
 
 	@Override
 	public int bathInsertList(List<House> houseList) {
+		if (houseList.isEmpty()) return -1;
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			HouseMapper mapper = session.getMapper(HouseMapper.class);
 			int count = mapper.bathInsertList(houseList);
@@ -68,32 +69,37 @@ public class HouseService implements HouseMapper {
 			String url = String.format(url_fang, community.getId(), i, "%7B%7D", time_13, authorization, time_13);
 			JSONObject res = JSON.parseObject(CommonUtils.postHTTPRequest(url));
 			if (!CommonUtils.JSONResultCheck(res)) return;
-			Map<String, JSONObject> houseMap = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONObject("list").toJavaObject(Map.class);
-			List<House> houseList = new LinkedList<>();
 			try {
-				houseList = res.getJSONObject("data").getJSONArray("list").toJavaList(House.class);
-				Iterator<House> it = houseList.iterator();
-				while (it.hasNext()) {
-					House house = it.next();
-					if (null != this.selectByHouseId(house.getHouseId())) {
-						it.remove();
+				Map<String, JSONObject> houseMap = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONObject("list").toJavaObject(Map.class);
+				List<House> houseList = new LinkedList<>();
+				for (String houseId : houseMap.keySet()) {
+					House house = houseMap.get(houseId).toJavaObject(House.class);
+					if (null == house.getHouseId() || null != this.selectByHouseId(house.getHouseId())) {
 						continue;
 					}
 					house.setCommunityUUID(community.getUuid() + "");
+					houseList.add(house);
 				}
 				this.bathInsertList(houseList);
+				count += houseList.size();
 				CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 				continue;
 			} catch (ClassCastException e) {
 				CommonUtils.Logger().error(e);
 			}
-			for (String houseId : houseMap.keySet()) {
-				House house = houseMap.get(houseId).toJavaObject(House.class);
+			List<House> houseList = new LinkedList<>();
+			houseList = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONArray("list").toJavaList(House.class);
+			CommonUtils.Logger().info(1);
+			Iterator<House> it = houseList.iterator();
+			while (it.hasNext()) {
+				House house = it.next();
+				if (null != this.selectByHouseId(house.getHouseId())) {
+					it.remove();
+					continue;
+				}
 				house.setCommunityUUID(community.getUuid() + "");
-				houseList.add(house);
 			}
 			this.bathInsertList(houseList);
-			count += houseList.size();
 			CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 		}
 	}

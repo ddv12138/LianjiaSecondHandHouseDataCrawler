@@ -7,6 +7,7 @@ import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
 import ORM.Service.HouseService;
 import Utils.CommonUtils;
+import Utils.HouseRunner;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,19 +67,10 @@ public class ORMTest {
 			int endIndex = (i + 1) * dataPreThread;
 			if (endIndex > dataLength) {
 				endIndex = dataLength;
-				List<Community> tmpList = communities.subList(startIndex, endIndex);
-				pool.submit(new Runnable() {
-					@Override
-					public void run() {
-						for (Community community : tmpList) {
-							HouseService service = new HouseService();
-							service.getCompleteHouseDataByCommunity(community);
-						}
-					}
-				});
 			}
+			List<Community> tmpList = communities.subList(startIndex, endIndex);
+			pool.submit(new HouseRunner(tmpList));
 		}
-		pool.shutdown();
 		while (true) {
 			if (pool.isTerminated()) {
 				break;
