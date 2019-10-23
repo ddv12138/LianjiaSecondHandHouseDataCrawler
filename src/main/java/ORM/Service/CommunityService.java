@@ -52,7 +52,18 @@ public class CommunityService implements CommunityMapper {
 		return null;
 	}
 
-	public void getCommunityData(District district) {
+	@Override
+	public List<Community> selectAll() {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.selectAll();
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return null;
+	}
+
+	public int getCommunityData(District district) {
 		try {
 			List<BigDecimal> lat = new LinkedList<>();
 			List<BigDecimal> lng = new LinkedList<>();
@@ -87,7 +98,7 @@ public class CommunityService implements CommunityMapper {
 				dict.put("max_lng", square[2].toString());
 				dict.put("min_lng", square[3].toString());
 				dict.put("request_ts", time_13);
-				String authorization = CommonUtils.getAuthorization(dict);
+				String authorization = CommonUtils.getNormalAuthorization(dict);
 				String realUrl = String.format(CommonUtils.url,
 						district.getCity_id(), dict.get("group_type"),
 						square[0].toString(), square[1].toString(),
@@ -95,12 +106,13 @@ public class CommunityService implements CommunityMapper {
 						"%7B%7D", time_13,
 						authorization, time_13);
 				JSONObject res = JSON.parseObject(CommonUtils.postHTTPRequest(realUrl));
-				parseCommunityJsonResult(res, district);
+				return parseCommunityJsonResult(res, district);
 			}
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
 			e.printStackTrace();
 		}
+		return -1;
 	}
 
 	private int parseCommunityJsonResult(JSONObject res, District district) {

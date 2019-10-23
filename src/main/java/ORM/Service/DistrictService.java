@@ -12,15 +12,6 @@ import org.apache.ibatis.session.SqlSession;
 import java.util.*;
 
 public class DistrictService implements DistrictMapper {
-	static final String url_fang = "https://ajax.lianjia.com/map/resblock/ershoufanglist/?callback=jQuery11110617424919783834_1541868368031"
-			+ "&id=%s"
-			+ "&order=0"
-			+ "&page=%d"
-			+ "&filters=%s"
-			+ "&request_ts=%s"
-			+ "&source=ljpc"
-			+ "&authorization=%s"
-			+ "&_=%s";
 	@Override
 	public void createTable() {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
@@ -58,7 +49,7 @@ public class DistrictService implements DistrictMapper {
 			dict.put("max_lng", city.getMax_lng());
 			dict.put("min_lng", city.getMin_lng());
 			dict.put("request_ts", time_13);
-			String authorization = CommonUtils.getAuthorization(dict);
+			String authorization = CommonUtils.getNormalAuthorization(dict);
 			String realUrl = String.format(CommonUtils.url,
 					city.getCity_id(), dict.get("group_type"),
 					city.getMax_lat(), city.getMin_lat(),

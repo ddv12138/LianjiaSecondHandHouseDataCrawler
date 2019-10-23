@@ -57,8 +57,13 @@ public class CommonUtils {
 		return LogManager.getRootLogger();
 	}
 
-	public static String getMD5(String str) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("MD5");
+	public static String getMD5(String str) {
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		md.update(str.getBytes(StandardCharsets.UTF_8));
 		byte[] secretBytes = md.digest();
 		String md5code = new BigInteger(1, secretBytes).toString(16);
@@ -108,18 +113,13 @@ public class CommonUtils {
 		return null;
 	}
 
-	public static String getAuthorization(HashMap dict) {
-		try {
-			String datastr = "vfkpbin1ix2rb88gfjebs0f60cbvhedlcity_id=%sgroup_type=%smax_lat=%s"
-					+ "max_lng=%smin_lat=%smin_lng=%srequest_ts=%s";
-			datastr = String.format(datastr,
-					dict.get("city_id"), dict.get("group_type"), dict.get("max_lat"),
-					dict.get("max_lng"), dict.get("min_lat"), dict.get("min_lng"), dict.get("request_ts"));
-			return CommonUtils.getMD5(datastr);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public static String getNormalAuthorization(HashMap dict) {
+		String datastr = "vfkpbin1ix2rb88gfjebs0f60cbvhedlcity_id=%sgroup_type=%smax_lat=%s"
+				+ "max_lng=%smin_lat=%smin_lng=%srequest_ts=%s";
+		datastr = String.format(datastr,
+				dict.get("city_id"), dict.get("group_type"), dict.get("max_lat"),
+				dict.get("max_lng"), dict.get("min_lat"), dict.get("min_lng"), dict.get("request_ts"));
+		return CommonUtils.getMD5(datastr);
 	}
 
 	public static List<BigDecimal> getStepRange(BigDecimal start, BigDecimal end, BigDecimal step) {

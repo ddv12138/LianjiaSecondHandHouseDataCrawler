@@ -33,4 +33,8 @@
         where name = #{name}
         limit 1;
     </select>
+    <select id="selectAll" resultType="Lianjia.Community">
+        select *
+        from Community;
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ import Lianjia.District;
 import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
+import ORM.Service.HouseService;
 import Utils.CommonUtils;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public class Sample {
 		districtService.createTable();
 		CommunityService communityService = new CommunityService();
 		communityService.createTable();
+		HouseService houseService = new HouseService();
+		houseService.createTable();
 		cityService.initDefaultData();
 		City city = cityService.selectByName(cityName);
 		try {

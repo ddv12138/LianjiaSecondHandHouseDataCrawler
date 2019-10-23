@@ -11,4 +11,6 @@ public interface CommunityMapper {
 	int bathInsertList(List<Community> communities);
 
 	Community selectByName(@Param("name") String name);
+
+	List<Community> selectAll();
 }
