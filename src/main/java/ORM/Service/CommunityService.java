@@ -111,7 +111,8 @@ public class CommunityService implements CommunityMapper {
 			Iterator<Community> it = communityList.iterator();
 			while (it.hasNext()) {
 				Community community = it.next();
-				if (null != this.selectByName(community.getName())) {
+				if (null != this.selectByName(community.getName())
+						|| !CommonUtils.isCommunityInDistrict(community, district)) {
 					it.remove();
 					continue;
 				}
@@ -122,11 +123,15 @@ public class CommunityService implements CommunityMapper {
 			}
 			return this.bathInsertList(communityList);
 		} catch (ClassCastException e) {
-			CommonUtils.Logger().trace(e);
+			CommonUtils.Logger().error(e);
 		}
 		Map<String, JSONObject> communityMap = res.getJSONObject("data").getJSONObject("list").toJavaObject(Map.class);
 		for (JSONObject communityObj : communityMap.values()) {
 			Community community = communityObj.toJavaObject(Community.class);
+			if (null != this.selectByName(community.getName())
+					|| !CommonUtils.isCommunityInDistrict(community, district)) {
+				continue;
+			}
 			community.setCity_id(district.getCity_id());
 			community.setCity_name(district.getCity_name());
 			community.setDistrict_id(district.getId() + "");

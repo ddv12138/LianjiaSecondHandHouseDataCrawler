@@ -1,5 +1,7 @@
 package Utils;
 
+import Lianjia.Community;
+import Lianjia.District;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,15 +10,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class CommonUtils {
 	static final String cookie = "lianjia_uuid=9bdccc1a-7584-4639-ba95-b42cf21bbbc7;" +
@@ -108,13 +108,18 @@ public class CommonUtils {
 		return null;
 	}
 
-	public static String getAuthorization(HashMap dict) throws NoSuchAlgorithmException {
-		String datastr = "vfkpbin1ix2rb88gfjebs0f60cbvhedlcity_id=%sgroup_type=%smax_lat=%s"
-				+ "max_lng=%smin_lat=%smin_lng=%srequest_ts=%s";
-		datastr = String.format(datastr,
-				dict.get("city_id"), dict.get("group_type"), dict.get("max_lat"),
-				dict.get("max_lng"), dict.get("min_lat"), dict.get("min_lng"), dict.get("request_ts"));
-		return CommonUtils.getMD5(datastr);
+	public static String getAuthorization(HashMap dict) {
+		try {
+			String datastr = "vfkpbin1ix2rb88gfjebs0f60cbvhedlcity_id=%sgroup_type=%smax_lat=%s"
+					+ "max_lng=%smin_lat=%smin_lng=%srequest_ts=%s";
+			datastr = String.format(datastr,
+					dict.get("city_id"), dict.get("group_type"), dict.get("max_lat"),
+					dict.get("max_lng"), dict.get("min_lat"), dict.get("min_lng"), dict.get("request_ts"));
+			return CommonUtils.getMD5(datastr);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static List<BigDecimal> getStepRange(BigDecimal start, BigDecimal end, BigDecimal step) {
@@ -136,4 +141,43 @@ public class CommonUtils {
 		return true;
 	}
 
+	public static boolean isCommunityInDistrict(Community community, District district) {
+		BigDecimal pointLat = new BigDecimal(community.getLatitude());
+		BigDecimal pointlng = new BigDecimal(community.getLongitude());
+		List<BigDecimal> lat = new LinkedList<>();
+		List<BigDecimal> lng = new LinkedList<>();
+		Optional<String> border = Optional.of(district.getBorder());
+		String[] borderPoints = border.get().split(";");
+		for (String s : borderPoints) {
+			lng.add(new BigDecimal(s.split(",")[0]));
+			lat.add(new BigDecimal(s.split(",")[1]));
+		}
+		BigDecimal maxLat = Collections.max(lat);
+		BigDecimal minLat = Collections.min(lat);
+
+		BigDecimal maxLng = Collections.max(lng);
+		BigDecimal minLng = Collections.min(lng);
+
+		//初级判断
+		boolean isLatValid = pointLat.compareTo(minLat) >= 0 && pointLat.compareTo(maxLat) <= 0;
+		boolean isLngValid = pointlng.compareTo(minLng) >= 0 && pointlng.compareTo(maxLng) <= 0;
+		if (!isLatValid || !isLngValid) {
+			return false;
+		}
+
+		//PNPoly算法，也叫射线法，未处理测量点刚好在多边形边上的特殊情况
+		boolean crossFlag = false;
+		for (int i = 0, j = borderPoints.length - 1; i < borderPoints.length; j = i++) {
+			boolean isPointInBetween = (lat.get(i).compareTo(pointLat) > 0) != (lat.get(j).compareTo(pointLat) > 0);
+//			CommonUtils.Logger().info(lat.get(j)+"-"+lat.get(i)+"="+lat.get(j).subtract(lat.get(i)));
+			if (lat.get(j).compareTo(lat.get(i)) == 0) continue;
+			boolean isCrossLine = lng.get(j).subtract(lng.get(i))
+					.multiply(pointLat.subtract(lat.get(i)))
+					.divide(
+							lat.get(j).subtract(lat.get(i))
+							, 11, RoundingMode.UP).add(lng.get(i)).compareTo(pointlng) > 0;
+			if (isPointInBetween && isCrossLine) crossFlag = !crossFlag;
+		}
+		return crossFlag;
+	}
 }

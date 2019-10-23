@@ -4,6 +4,7 @@ import Lianjia.District;
 import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -29,10 +30,13 @@ public class ORMTest {
 	}
 
 	@Test
+	@Ignore
 	public void CommunityDataTest() {
 		DistrictService districtService = new DistrictService();
-		District district = districtService.selectByName("青山");
 		CommunityService communityService = new CommunityService();
+		District district = districtService.selectByName("东西湖");
+		communityService.getCommunityData(district);
+		district = districtService.selectByName("武昌");
 		communityService.getCommunityData(district);
 	}
 }
