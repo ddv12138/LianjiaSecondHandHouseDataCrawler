@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -77,8 +79,8 @@ public class CommonUtils {
 		HttpURLConnection connection = null;
 		try {
 			URL url = new URL(linkUrl);
-//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
-			connection = (HttpURLConnection) url.openConnection();
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
+			connection = (HttpURLConnection) url.openConnection(proxy);
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");
@@ -104,7 +106,9 @@ public class CommonUtils {
 			return result.substring(result.indexOf("{"), result.lastIndexOf(")"));
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
-			e.printStackTrace();
+			CommonUtils.Logger().info("连接失败，重试中");
+			postHTTPRequest(linkUrl);
+//			e.printStackTrace();
 		} finally {
 			if (null != connection) {
 				connection.disconnect();

@@ -60,10 +60,8 @@ public class HouseService implements HouseMapper {
 		return null;
 	}
 
-	public void getCompleteHouseDataByCommunity(Community community) {
+	public void getCompleteHouseDataByCommunity(Community community,Map<String,House> resMap) {
 		int pageCount = (int) Math.ceil(community.getCount() / 10) + 1;
-		int count = 0;
-		List<House> houseList = new LinkedList<>();
 		for (int i = 0; i < pageCount; i++) {
 			String time_13 = new Date().getTime() + "";
 			String authorization = CommonUtils.getMD5(String.format(auth_fang, community.getId(), 0, i, time_13));
@@ -78,15 +76,15 @@ public class HouseService implements HouseMapper {
 						continue;
 					}
 					house.setCommunityUUID(community.getUuid() + "");
-					houseList.add(house);
+					resMap.put(house.getHouseId(),house);
+					CommonUtils.Logger().info(resMap.size());
 				}
-				count += houseList.size();
-				CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
+//				CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 				continue;
 			} catch (ClassCastException e) {
 				CommonUtils.Logger().error(e);
 			}
-			houseList = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONArray("list").toJavaList(House.class);
+			List<House> houseList = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONArray("list").toJavaList(House.class);
 			Iterator<House> it = houseList.iterator();
 			while (it.hasNext()) {
 				House house = it.next();
@@ -95,10 +93,10 @@ public class HouseService implements HouseMapper {
 					continue;
 				}
 				house.setCommunityUUID(community.getUuid() + "");
+				resMap.put(house.getHouseId(),house);
+				CommonUtils.Logger().info(resMap.size());
 			}
-			count += houseList.size();
-			CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
+//			CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 		}
-		this.bathInsertList(houseList);
 	}
 }

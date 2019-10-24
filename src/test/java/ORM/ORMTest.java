@@ -2,6 +2,7 @@ package ORM;
 
 import Lianjia.Community;
 import Lianjia.District;
+import Lianjia.House;
 import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -54,6 +55,8 @@ public class ORMTest {
 	public void HouseDataTest() {
 		CommunityService communityService = new CommunityService();
 		List<Community> communities = communityService.selectAll();
+		HouseService houseService = new HouseService();
+		houseService.createTable();
 
 		int dataLength = communities.size();
 		int coreNum = Runtime.getRuntime().availableProcessors();
@@ -61,6 +64,8 @@ public class ORMTest {
 		int groupNum = (int) Math.round(Math.ceil(dataLength / (double) dataPreThread));
 		if (groupNum <= 0) groupNum = 1;
 
+		Map<String, House> resMap = new LinkedHashMap<>();
+		resMap = Collections.synchronizedMap(resMap);
 		ExecutorService pool = Executors.newFixedThreadPool(groupNum);
 		for (int i = 0; i < groupNum; i++) {
 			int startIndex = i * dataPreThread;
@@ -69,12 +74,19 @@ public class ORMTest {
 				endIndex = dataLength;
 			}
 			List<Community> tmpList = communities.subList(startIndex, endIndex);
-			pool.submit(new HouseRunner(tmpList));
+			pool.submit(new HouseRunner(tmpList, resMap));
 		}
 		while (true) {
 			if (pool.isTerminated()) {
 				break;
 			}
+		}
+		List<House> resList = new ArrayList<>(resMap.values());
+		int subNum = resList.size() / 10000 + 1;
+		for (int i = 0; i < subNum; i++) {
+			int startIndex = i * 10000;
+			int endIndex = startIndex + 10000;
+			houseService.bathInsertList(resList.subList(startIndex, endIndex));
 		}
 	}
 }
