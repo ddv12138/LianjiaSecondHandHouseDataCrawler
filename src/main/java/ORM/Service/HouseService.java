@@ -9,7 +9,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.SqlSession;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class HouseService implements HouseMapper {
 
@@ -62,7 +65,7 @@ public class HouseService implements HouseMapper {
 
 	public void getCompleteHouseDataByCommunity(Community community,Map<String,House> resMap) {
 		int pageCount = (int) Math.ceil(community.getCount() / 10) + 1;
-		for (int i = 0; i < pageCount; i++) {
+		for (int i = 1; i < pageCount; i++) {
 			String time_13 = new Date().getTime() + "";
 			String authorization = CommonUtils.getMD5(String.format(auth_fang, community.getId(), 0, i, time_13));
 			String url = String.format(url_fang, community.getId(), i, "%7B%7D", time_13, authorization, time_13);
@@ -77,8 +80,8 @@ public class HouseService implements HouseMapper {
 					}
 					house.setCommunityUUID(community.getUuid() + "");
 					resMap.put(house.getHouseId(),house);
-					CommonUtils.Logger().info(resMap.size());
 				}
+				CommonUtils.Logger().info(resMap.size());
 //				CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 				continue;
 			} catch (ClassCastException e) {
@@ -94,8 +97,8 @@ public class HouseService implements HouseMapper {
 				}
 				house.setCommunityUUID(community.getUuid() + "");
 				resMap.put(house.getHouseId(),house);
-				CommonUtils.Logger().info(resMap.size());
 			}
+			CommonUtils.Logger().info(resMap.size());
 //			CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");
 		}
 	}

@@ -3,7 +3,7 @@ package Lianjia;
 import java.util.Date;
 
 public class House {
-	String houseId, houseCode, title, appid, source, imgSrc, layoutImgSrc, imgSrcUri,
+	private String houseId, houseCode, title, appid, source, imgSrc, layoutImgSrc, imgSrcUri,
 			layoutImgSrcUri, roomNum, square, buildingArea, buildYear, isNew,
 			orientation, floorStat, totalFloor, decorateType, hbtName,
 			isYezhuComment, isGarage, houseType, isFocus, status, isValid, signTime,
@@ -13,7 +13,7 @@ public class House {
 			subwayInfo, schoolName, schoolArr, bizcircleFullSpell, house_video_info, price,
 			unitPrice, viewUrl, listPrice, publishTime, isVilla, villaNoFloorLevel,
 			villaName, tags, CommunityUUID;
-	Date ctime, mtime;
+	private Date ctime, mtime;
 
 	public Date getMtime() {
 		return mtime;

@@ -2,6 +2,7 @@ package Utils;
 
 import Lianjia.Community;
 import Lianjia.District;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,17 +22,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class CommonUtils {
-	static final String cookie = "lianjia_uuid=9bdccc1a-7584-4639-ba95-b42cf21bbbc7;" +
+	static final String cookie = "lianjia_uuid=9cdccc1a-7584-4639-ba95-b42cf21bbbc7;" +
 			"jzqa=1.3180246719396510700.1534145942.1534145942.1534145942.1;" +
 			"jzqckmp=1;" +
 			"ga=GA1.2.964691746.1534145946;" +
 			"gid=GA1.2.826685830.1534145946;" +
 			"UM_distinctid=165327625186a-029cf60b1994ee-3461790f-fa000-165327625199d3;" +
-			"select_city=420100;" +
+			"select_city=420000;" +
 			"lianjia_ssid=34fc4efa-7fcc-4f3f-82ae-010401f27aa8;" +
 			"_smt_uid=5b72c5f7.5815bcdf;" +
 			"Hm_lvt_9152f8221cb6243a53c83b956842be8a=1537530243;" +
-			"select_city=420000;_jzqc=1;" +
+			"select_city=420000;" +
+			"_jzqc=1;" +
 			"_gid=GA1.2.178601063.1541866763;" +
 			"_jzqb=1.2.10.1541866760.1";
 	static final HashMap<String, String> headers = new LinkedHashMap<>();
@@ -80,12 +82,13 @@ public class CommonUtils {
 		try {
 			URL url = new URL(linkUrl);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
+			Proxy proxy2 = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
 			connection = (HttpURLConnection) url.openConnection(proxy);
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");
 			connection.setConnectTimeout(5000);
-			connection.setReadTimeout(20000);
+			connection.setReadTimeout(5000);
 			connection.setUseCaches(false);
 			for (String key : headers.keySet()) {
 				connection.setRequestProperty(key, headers.get(key));
@@ -103,12 +106,20 @@ public class CommonUtils {
 					result = sb.toString();
 				}
 			}
+			JSONObject res = JSON.parseObject(result.substring(result.indexOf("{"), result.lastIndexOf(")")));
+			if (null != res && !res.isEmpty() && res.getIntValue("errno") == 10001 && res.getString("error").indexOf("data") > -1) {
+				CommonUtils.Logger().error("被封ip，重新连接");
+				postHTTPRequest(linkUrl);
+			}
 			return result.substring(result.indexOf("{"), result.lastIndexOf(")"));
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
 			CommonUtils.Logger().info("连接失败，重试中");
+			if (null != connection) {
+				connection.disconnect();
+				connection = null;
+			}
 			postHTTPRequest(linkUrl);
-//			e.printStackTrace();
 		} finally {
 			if (null != connection) {
 				connection.disconnect();

@@ -155,7 +155,8 @@ class Lianjia():
             authorization, time_13)
         print(url)
         with requests.Session() as sess:
-            ret = sess.get(url=url, headers=self.headers, cookies=self.cookies)
+            proxies={'http':'127.0.0.1:1080'}
+            ret = sess.get(url=url, headers=self.headers,proxies=proxies,cookies=self.cookies)
 
             house_json = json.loads(ret.text[43:-1])
 
@@ -203,7 +204,8 @@ class Lianjia():
             self.city_id, 'community', max_lat, min_lat, max_lng, min_lng, '%7B%7D', time_13, authorization, time_13)
 
         with requests.Session() as sess:
-            ret = sess.get(url=url, headers=self.headers, cookies=self.cookies)
+            proxies={'http':'127.0.0.1:1080'}
+            ret = sess.get(url=url, headers=self.headers,proxies=proxies,cookies=self.cookies)
             house_json = json.loads(ret.text[43:-1])
 
             if house_json['errno'] == 0:
@@ -230,7 +232,8 @@ class Lianjia():
             ###############-----拼接请求url-----#################
             url = self.url_fang % (id, page, '%7B%7D', time_13, authorization, time_13)
             with requests.Session() as sess:
-                ret = sess.get(url=url, headers=self.headers, cookies=self.cookies)
+                proxies={'http':'127.0.0.1:1080'}
+                ret = sess.get(url=url, headers=self.headers,proxies=proxies,cookies=self.cookies)
 
                 house_json = json.loads(ret.text[41:-1])
 

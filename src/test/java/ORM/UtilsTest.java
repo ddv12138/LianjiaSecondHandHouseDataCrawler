@@ -72,4 +72,5 @@ public class UtilsTest {
 		CommonUtils.Logger().info(CommonUtils.isCommunityInDistrict(c, d5));
 		CommonUtils.Logger().info(CommonUtils.isCommunityInDistrict(c, d6));
 	}
+
 }

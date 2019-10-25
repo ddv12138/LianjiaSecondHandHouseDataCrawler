@@ -7,7 +7,6 @@ import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
 import ORM.Service.HouseService;
-import Utils.CommonUtils;
 import Utils.HouseRunner;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class ORMTest {
@@ -76,16 +74,18 @@ public class ORMTest {
 			List<Community> tmpList = communities.subList(startIndex, endIndex);
 			pool.submit(new HouseRunner(tmpList, resMap));
 		}
+		pool.shutdown();
 		while (true) {
 			if (pool.isTerminated()) {
 				break;
 			}
 		}
 		List<House> resList = new ArrayList<>(resMap.values());
-		int subNum = resList.size() / 10000 + 1;
+		int subNum = resList.size() / 100 + 1;
 		for (int i = 0; i < subNum; i++) {
-			int startIndex = i * 10000;
-			int endIndex = startIndex + 10000;
+			int startIndex = i * 100;
+			int endIndex = startIndex + 100;
+			if (endIndex > resList.size()) endIndex = resList.size();
 			houseService.bathInsertList(resList.subList(startIndex, endIndex));
 		}
 	}
