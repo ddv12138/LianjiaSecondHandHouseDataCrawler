@@ -10,13 +10,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class HouseService implements HouseMapper {
 
-	static final String url_fang = "https://ajax.lianjia.com/map/resblock/ershoufanglist/?callback=jQuery11110617424919783834_1541868368031"
+	private static final String url_fang = "https://ajax.lianjia.com/map/resblock/ershoufanglist/?callback=jQuery11110617424919783834_1541868368031"
 			+ "&id=%s"
 			+ "&order=0"
 			+ "&page=%d"
@@ -25,7 +24,7 @@ public class HouseService implements HouseMapper {
 			+ "&source=ljpc"
 			+ "&authorization=%s"
 			+ "&_=%s";
-	static String auth_fang = "vfkpbin1ix2rb88gfjebs0f60cbvhedlid=%sorder=%dpage=%drequest_ts=%s";
+	private static String auth_fang = "vfkpbin1ix2rb88gfjebs0f60cbvhedlid=%sorder=%dpage=%drequest_ts=%s";
 
 	@Override
 	public void createTable() {
@@ -75,9 +74,6 @@ public class HouseService implements HouseMapper {
 				Map<String, JSONObject> houseMap = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONObject("list").toJavaObject(Map.class);
 				for (String houseId : houseMap.keySet()) {
 					House house = houseMap.get(houseId).toJavaObject(House.class);
-					if (null == house.getHouseId() || null != this.selectByHouseId(house.getHouseId())) {
-						continue;
-					}
 					house.setCommunityUUID(community.getUuid() + "");
 					resMap.put(house.getHouseId(),house);
 				}
@@ -88,15 +84,9 @@ public class HouseService implements HouseMapper {
 				CommonUtils.Logger().error(e);
 			}
 			List<House> houseList = res.getJSONObject("data").getJSONObject("ershoufang_info").getJSONArray("list").toJavaList(House.class);
-			Iterator<House> it = houseList.iterator();
-			while (it.hasNext()) {
-				House house = it.next();
-				if (null != this.selectByHouseId(house.getHouseId())) {
-					it.remove();
-					continue;
-				}
+			for (House house : houseList) {
 				house.setCommunityUUID(community.getUuid() + "");
-				resMap.put(house.getHouseId(),house);
+				resMap.put(house.getHouseId(), house);
 			}
 			CommonUtils.Logger().info(resMap.size());
 //			CommonUtils.Logger().info(community.getCity_name() + "_" + community.getDistrict_name() + "_" + community.getName() + ":(" + count + "/" + community.getCount() + ")");

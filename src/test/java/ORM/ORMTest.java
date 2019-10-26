@@ -18,11 +18,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class ORMTest {
+class ORMTest {
 	private static final Logger logger = LogManager.getLogger(ORMTest.class);
 
 	@Test
-	public void CityTest() {
+	void CityTest() {
 		CityService service = new CityService();
 		try {
 			service.createTable();
@@ -39,7 +39,7 @@ public class ORMTest {
 
 	@Test
 	@Ignore
-	public void CommunityDataTest() {
+	void CommunityDataTest() {
 		DistrictService districtService = new DistrictService();
 		CommunityService communityService = new CommunityService();
 		District district = districtService.selectByName("东西湖");
@@ -50,7 +50,7 @@ public class ORMTest {
 
 	@Test
 	@Ignore
-	public void HouseDataTest() {
+	void HouseDataTestMultiThread() {
 		CommunityService communityService = new CommunityService();
 		List<Community> communities = communityService.selectAll();
 		HouseService houseService = new HouseService();
@@ -79,6 +79,27 @@ public class ORMTest {
 			if (pool.isTerminated()) {
 				break;
 			}
+		}
+		List<House> resList = new ArrayList<>(resMap.values());
+		int subNum = resList.size() / 100 + 1;
+		for (int i = 0; i < subNum; i++) {
+			int startIndex = i * 100;
+			int endIndex = startIndex + 100;
+			if (endIndex > resList.size()) endIndex = resList.size();
+			houseService.bathInsertList(resList.subList(startIndex, endIndex));
+		}
+	}
+
+	@Test
+	@Ignore
+	void HouseDataTestSingleThread() {
+		CommunityService communityService = new CommunityService();
+		List<Community> communities = communityService.selectAll();
+		HouseService houseService = new HouseService();
+		houseService.createTable();
+		Map<String, House> resMap = new LinkedHashMap<>();
+		for (Community community : communities) {
+			houseService.getCompleteHouseDataByCommunity(community, resMap);
 		}
 		List<House> resList = new ArrayList<>(resMap.values());
 		int subNum = resList.size() / 100 + 1;

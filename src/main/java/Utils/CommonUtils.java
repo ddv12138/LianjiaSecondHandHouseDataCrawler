@@ -36,7 +36,7 @@ public class CommonUtils {
 			"_jzqc=1;" +
 			"_gid=GA1.2.178601063.1541866763;" +
 			"_jzqb=1.2.10.1541866760.1";
-	static final HashMap<String, String> headers = new LinkedHashMap<>();
+	private static final HashMap<String, String> headers = new LinkedHashMap<>();
 
 	static {
 		headers.put("Host", "ajax.lianjia.com");
@@ -68,12 +68,11 @@ public class CommonUtils {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+		assert md != null;
 		md.update(str.getBytes(StandardCharsets.UTF_8));
 		byte[] secretBytes = md.digest();
 		String md5code = new BigInteger(1, secretBytes).toString(16);
-		for (int i = 0; i < 32 - md5code.length(); i++) {
-			md5code = "0" + md5code;
-		}
+		for (int i = 0; i < 32 - md5code.length(); i++) md5code = "0" + md5code;
 		return md5code;
 	}
 
@@ -83,7 +82,7 @@ public class CommonUtils {
 			URL url = new URL(linkUrl);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
 			Proxy proxy2 = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
-			connection = (HttpURLConnection) url.openConnection(proxy);
+			connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");
@@ -98,7 +97,7 @@ public class CommonUtils {
 			String result = null;
 			if (connection.getResponseCode() == 200) {
 				try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-					StringBuffer sb = new StringBuffer();
+					StringBuilder sb = new StringBuilder();
 					String tmp;
 					while (null != (tmp = br.readLine())) {
 						sb.append(tmp);
@@ -106,12 +105,14 @@ public class CommonUtils {
 					result = sb.toString();
 				}
 			}
-			JSONObject res = JSON.parseObject(result.substring(result.indexOf("{"), result.lastIndexOf(")")));
-			if (null != res && !res.isEmpty() && res.getIntValue("errno") == 10001 && res.getString("error").indexOf("data") > -1) {
+			assert result != null;
+			String resStr = result.substring(result.indexOf("{"), result.lastIndexOf(")"));
+			JSONObject res = JSON.parseObject(resStr);
+			if (null != res && !res.isEmpty() && res.getIntValue("errno") == 10001 && res.getString("error").contains("data")) {
 				CommonUtils.Logger().error("被封ip，重新连接");
 				postHTTPRequest(linkUrl);
 			}
-			return result.substring(result.indexOf("{"), result.lastIndexOf(")"));
+			return resStr;
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
 			CommonUtils.Logger().info("连接失败，重试中");

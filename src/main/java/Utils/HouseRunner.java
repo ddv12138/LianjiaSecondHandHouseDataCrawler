@@ -22,5 +22,6 @@ public class HouseRunner implements Runnable {
 			HouseService service = new HouseService();
 			service.getCompleteHouseDataByCommunity(community,resMap);
 		}
+		CommonUtils.Logger().info(Thread.currentThread().getName() + "----一个线程结束，起止id为" + communities.get(0).getUuid() + "----->" + communities.get(communities.size() - 1).getUuid());
 	}
 }
