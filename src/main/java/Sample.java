@@ -6,7 +6,6 @@ import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
 import ORM.Service.HouseService;
-import Utils.CommonUtils;
 import Utils.HouseRunner;
 
 import java.util.*;
@@ -18,10 +17,10 @@ public class Sample {
 		String cityName = "深圳";
 		CityService cityService = new CityService();
 		City city = cityService.selectByName(cityName);
-		List<District> districts = getDistrictData(city);
-		int count = getCommunityData(districts);
-		CommonUtils.Logger().info("读取到" + count + "条小区信息");
-//		HouseDataTestMultiThread(city);
+//		List<District> districts = getDistrictData(city);
+//		int count = getCommunityData(districts);
+//		CommonUtils.Logger().info("读取到" + count + "条小区信息");
+		HouseDataTestMultiThread(city);
 	}
 
 	private static List<District> getDistrictData(City city) {

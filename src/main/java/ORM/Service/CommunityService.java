@@ -98,8 +98,8 @@ public class CommunityService implements CommunityMapper {
 					squares.add(decimals);
 				}
 			}
-			String time_13 = new Date().getTime() + "";
 			for (int i = 0; i < squares.size(); i++) {
+				String time_13 = new Date().getTime() + "";
 				BigDecimal[] square = squares.get(i);
 				CommonUtils.Logger().info("正在处理行政区划(" + district.getCity_name() + "_" + district.getName() + ")下小区信息（" + (i + 1) + "/" + squares.size() + ")");
 				HashMap<String, String> dict = new LinkedHashMap<>();
