@@ -1,5 +1,6 @@
 package ORM;
 
+import Lianjia.City;
 import Lianjia.Community;
 import Lianjia.District;
 import Lianjia.House;
@@ -7,6 +8,7 @@ import ORM.Service.CityService;
 import ORM.Service.CommunityService;
 import ORM.Service.DistrictService;
 import ORM.Service.HouseService;
+import Utils.CommonUtils;
 import Utils.HouseRunner;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.logging.log4j.LogManager;
@@ -109,5 +111,23 @@ class ORMTest {
 			if (endIndex > resList.size()) endIndex = resList.size();
 			houseService.bathInsertList(resList.subList(startIndex, endIndex));
 		}
+	}
+
+	@Test
+	void selectCommunityByDistrict() {
+		CommunityService communityService = new CommunityService();
+		DistrictService districtService = new DistrictService();
+		District district = districtService.selectByName("东湖高新");
+		List<Community> communities = communityService.selectByDistrict(district);
+		CommonUtils.Logger().info(communities.size());
+	}
+
+	@Test
+	void selectDistrictByCity() {
+		CityService cityService = new CityService();
+		City city = cityService.selectByName("武汉");
+		DistrictService districtService = new DistrictService();
+		List<District> districts = districtService.selectByCity(city);
+		CommonUtils.Logger().info(districts);
 	}
 }

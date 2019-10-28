@@ -63,6 +63,17 @@ public class CommunityService implements CommunityMapper {
 		return null;
 	}
 
+	@Override
+	public List<Community> selectByDistrict(District district) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.selectByDistrict(district);
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return null;
+	}
+
 	public int getCommunityData(District district) {
 		try {
 			List<BigDecimal> lat = new LinkedList<>();

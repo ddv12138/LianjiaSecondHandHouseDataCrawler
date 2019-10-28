@@ -43,4 +43,9 @@
         from District
         where city_id = #{city_id}
     </delete>
+    <select id="selectByCity" parameterType="Lianjia.City" resultType="Lianjia.District">
+        select *
+        from District
+        where city_id = #{city_id}
+    </select>
 </mapper>

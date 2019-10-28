@@ -37,4 +37,9 @@
         select *
         from Community;
     </select>
+    <select id="selectByDistrict" resultType="Lianjia.Community" parameterType="Lianjia.District">
+        select *
+        from Community
+        where district_id = #{id};
+    </select>
 </mapper>

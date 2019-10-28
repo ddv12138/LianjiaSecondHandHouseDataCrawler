@@ -1,5 +1,6 @@
 package ORM.Mapper;
 
+import Lianjia.City;
 import Lianjia.District;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,4 +14,6 @@ public interface DistrictMapper {
 	District selectByName(String name);
 
 	int deleteByCityId(@Param("city_id") String city_id);
+
+	List<District> selectByCity(City city);
 }

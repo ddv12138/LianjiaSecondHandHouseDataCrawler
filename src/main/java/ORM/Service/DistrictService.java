@@ -99,4 +99,15 @@ public class DistrictService implements DistrictMapper {
 			throw e;
 		}
 	}
+
+	@Override
+	public List<District> selectByCity(City city) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			DistrictMapper mapper = session.getMapper(DistrictMapper.class);
+			return mapper.selectByCity(city);
+		} catch (Exception e) {
+			CommonUtils.Logger().error("查询失败，数据表可能不存在");
+			throw e;
+		}
+	}
 }

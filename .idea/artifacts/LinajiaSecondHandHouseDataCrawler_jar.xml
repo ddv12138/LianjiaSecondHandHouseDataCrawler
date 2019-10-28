@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LinajiaSecondHandHouseDataCrawler:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LinajiaSecondHandHouseDataCrawler_jar</output-path>
+    <root id="archive" name="LinajiaSecondHandHouseDataCrawler.jar">
+      <element id="module-output" name="LinajiaSecondHandHouseDataCrawler" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/alibaba/fastjson/1.2.62/fastjson-1.2.62.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.12.1/log4j-api-2.12.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-core/2.12.1/log4j-core-2.12.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.28.0/sqlite-jdbc-3.28.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mybatis/mybatis/3.5.2/mybatis-3.5.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
