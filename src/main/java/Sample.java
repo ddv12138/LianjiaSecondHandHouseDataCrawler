@@ -15,13 +15,13 @@ import java.util.concurrent.Executors;
 
 public class Sample {
 	public static void main(String... args) {
-		String cityName = "武汉";
+		String cityName = "深圳";
 		CityService cityService = new CityService();
 		City city = cityService.selectByName(cityName);
 		List<District> districts = getDistrictData(city);
 		int count = getCommunityData(districts);
 		CommonUtils.Logger().info("读取到" + count + "条小区信息");
-		HouseDataTestMultiThread(city);
+//		HouseDataTestMultiThread(city);
 	}
 
 	private static List<District> getDistrictData(City city) {

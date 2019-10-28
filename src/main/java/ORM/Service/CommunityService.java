@@ -75,6 +75,7 @@ public class CommunityService implements CommunityMapper {
 	}
 
 	public int getCommunityData(District district) {
+		int count = 0;
 		try {
 			List<BigDecimal> lat = new LinkedList<>();
 			List<BigDecimal> lng = new LinkedList<>();
@@ -117,8 +118,9 @@ public class CommunityService implements CommunityMapper {
 						"%7B%7D", time_13,
 						authorization, time_13);
 				JSONObject res = JSON.parseObject(CommonUtils.postHTTPRequest(realUrl));
-				return parseCommunityJsonResult(res, district);
+				count += parseCommunityJsonResult(res, district);
 			}
+			return count;
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
 			e.printStackTrace();
