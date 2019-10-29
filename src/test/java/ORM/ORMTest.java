@@ -130,4 +130,22 @@ class ORMTest {
 		List<District> districts = districtService.selectByCity(city);
 		CommonUtils.Logger().info(districts);
 	}
+
+	@Test
+	void houseCountTestByDistrict() {
+		CommunityService communityService = new CommunityService();
+		DistrictService districtService = new DistrictService();
+		District district = districtService.selectByName("东湖高新");
+		int count = communityService.countPreHouseNumByDistrict(district);
+		CommonUtils.Logger().info(count);
+	}
+
+	@Test
+	void housePreCountTestByCity() {
+		CommunityService communityService = new CommunityService();
+		CityService cityService = new CityService();
+		City city = cityService.selectByName("武汉");
+		int count = communityService.countPreHouseNumByCity(city);
+		CommonUtils.Logger().info(count);
+	}
 }

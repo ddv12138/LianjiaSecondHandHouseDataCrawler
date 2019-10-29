@@ -18,10 +18,12 @@ public class HouseRunner implements Runnable {
 
 	@Override
 	public void run() {
+		int count = 0;
 		for (Community community : communities) {
+			count += community.getCount();
 			HouseService service = new HouseService();
 			service.getCompleteHouseDataByCommunity(community,resMap);
 		}
-		CommonUtils.Logger().info(Thread.currentThread().getName() + "----一个线程结束，起止id为" + communities.get(0).getUuid() + "----->" + communities.get(communities.size() - 1).getUuid());
+		CommonUtils.Logger().info(Thread.currentThread().getName() + "----一个线程结束，处理了" + communities.size() + "个小区" + count + "条二手房数据");
 	}
 }

@@ -1,5 +1,6 @@
 package ORM.Service;
 
+import Lianjia.City;
 import Lianjia.Community;
 import Lianjia.District;
 import ORM.Mapper.CommunityMapper;
@@ -68,6 +69,39 @@ public class CommunityService implements CommunityMapper {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
 			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
 			return mapper.selectByDistrict(district);
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return null;
+	}
+
+	@Override
+	public int countPreHouseNumByDistrict(District district) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.countPreHouseNumByDistrict(district);
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return -1;
+	}
+
+	@Override
+	public Integer countPreHouseNumByCity(City city) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.countPreHouseNumByCity(city);
+		} catch (Exception e) {
+			CommonUtils.Logger().error(e);
+		}
+		return null;
+	}
+
+	@Override
+	public List<Community> selectByCity(City city) {
+		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
+			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+			return mapper.selectByCity(city);
 		} catch (Exception e) {
 			CommonUtils.Logger().error(e);
 		}

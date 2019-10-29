@@ -42,4 +42,20 @@
         from Community
         where district_id = #{id};
     </select>
+    <select id="selectByCity" resultType="Lianjia.Community" parameterType="Lianjia.City">
+        select *
+        from Community
+        where city_id = #{city_id}
+        order by count;
+    </select>
+    <select id="countPreHouseNumByDistrict" resultType="Integer" parameterType="Lianjia.District">
+        select sum(count)
+        from Community
+        where district_id = #{id};
+    </select>
+    <select id="countPreHouseNumByCity" resultType="Integer" parameterType="Lianjia.City">
+        select sum(count)
+        from Community
+        where city_id = #{city_id}
+    </select>
 </mapper>

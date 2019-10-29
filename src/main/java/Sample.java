@@ -41,33 +41,32 @@ public class Sample {
 
 	private static void HouseDataTestMultiThread(City city) {
 		CommunityService communityService = new CommunityService();
-		DistrictService districtService = new DistrictService();
-		List<District> districts = districtService.selectByCity(city);
+		List<Community> communities = communityService.selectByCity(city);
 
-		List<Community> communities = new ArrayList<>();
-		for (District district : districts) {
-			communities.addAll(communityService.selectByDistrict(district));
-		}
-
-		HouseService houseService = new HouseService();
-		houseService.createTable();
-
-		int dataLength = communities.size();
+		int dataLength = communityService.countPreHouseNumByCity(city);
 		int coreNum = Runtime.getRuntime().availableProcessors();
-		int dataPreThread = (int) Math.round(Math.ceil(communities.size() / (double) (coreNum)));
-		int groupNum = (int) Math.round(Math.ceil(dataLength / (double) dataPreThread));
-		if (groupNum <= 0) groupNum = 1;
+		int dataPreThread = (int) Math.round(Math.ceil(dataLength / (double) (coreNum)));
+
+		Map<Integer, Integer> indexMap = new HashMap<>();
+		int houseCount = 0;
+		for (int i = 0; i < communities.size(); i++) {
+			houseCount += communities.get(i).getCount();
+			for (int j = i + 1; j < communities.size(); j++) {
+				houseCount += communities.get(j).getCount();
+				if (houseCount > dataPreThread) {
+					indexMap.put(i, j);
+					houseCount = 0;
+					i = j - 1;
+					break;
+				}
+			}
+		}
 
 		Map<String, House> resMap = new LinkedHashMap<>();
 		resMap = Collections.synchronizedMap(resMap);
-		ExecutorService pool = Executors.newFixedThreadPool(groupNum);
-		for (int i = 0; i < groupNum; i++) {
-			int startIndex = i * dataPreThread;
-			int endIndex = (i + 1) * dataPreThread;
-			if (endIndex > dataLength) {
-				endIndex = dataLength;
-			}
-			List<Community> tmpList = communities.subList(startIndex, endIndex);
+		ExecutorService pool = Executors.newFixedThreadPool(indexMap.size());
+		for (Map.Entry<Integer, Integer> entry : indexMap.entrySet()) {
+			List<Community> tmpList = communities.subList(entry.getKey(), entry.getValue());
 			pool.submit(new HouseRunner(tmpList, resMap));
 		}
 		pool.shutdown();
@@ -76,6 +75,8 @@ public class Sample {
 				break;
 			}
 		}
+		HouseService houseService = new HouseService();
+		houseService.createTable();
 		List<House> resList = new ArrayList<>(resMap.values());
 		int subNum = resList.size() / 100 + 1;
 		for (int i = 0; i < subNum; i++) {
