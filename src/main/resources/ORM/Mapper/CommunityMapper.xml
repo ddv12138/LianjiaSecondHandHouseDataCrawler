@@ -6,7 +6,7 @@
     <select id="createTable">
         create table if not exists Community
         (
-            uuid integer primary key autoincrement,
+            uuid,
             id,
             district_id,
             city_id,
@@ -20,7 +20,7 @@
         );
     </select>
     <insert id="bathInsertList" parameterType="java.util.List" useGeneratedKeys="true">
-        insert or replace into Community(
+        insert into Community(
         id,district_id, city_id, unit_price, count,name, district_name, longitude, latitude,city_name) values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.id},#{item.district_id},#{item.city_id},#{item.unit_price}

@@ -82,7 +82,7 @@ public class CommonUtils {
 			URL url = new URL(linkUrl);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 1080));
 			Proxy proxy2 = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("188.131.157.4", 8888));
-			connection = (HttpURLConnection) url.openConnection();
+			connection = (HttpURLConnection) url.openConnection(proxy);
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setRequestMethod("GET");

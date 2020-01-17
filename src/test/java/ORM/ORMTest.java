@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 class ORMTest {
 	private static final Logger logger = LogManager.getLogger(ORMTest.class);
 
@@ -42,6 +41,17 @@ class ORMTest {
 	@Test
 	@Ignore
 	void CommunityDataTest() {
+		DistrictService districtService = new DistrictService();
+		CommunityService communityService = new CommunityService();
+		District district = districtService.selectByName("东西湖");
+		communityService.getCommunityData(district);
+		district = districtService.selectByName("武昌");
+		communityService.getCommunityData(district);
+	}
+
+	@Test
+	@Ignore
+	void HouseDataTest() {
 		DistrictService districtService = new DistrictService();
 		CommunityService communityService = new CommunityService();
 		District district = districtService.selectByName("东西湖");

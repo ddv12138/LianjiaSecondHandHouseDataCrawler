@@ -19,9 +19,9 @@ public class CommunityService implements CommunityMapper {
 	@Override
 	public void createTable() {
 		try (SqlSession session = SqlliteSqlSessionFactoryBuilder.getSession()) {
-			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
-			mapper.createTable();
-			session.commit();
+//			CommunityMapper mapper = session.getMapper(CommunityMapper.class);
+//			mapper.createTable();
+//			session.commit();
 		} catch (Exception e) {
 			CommonUtils.Logger().error("创建表失败,表可能已经存在");
 			throw e;

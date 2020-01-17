@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 public class Sample {
 	public static void main(String... args) {
-		String cityName = "深圳";
+		String cityName = "北京";
 		CityService cityService = new CityService();
 		City city = cityService.selectByName(cityName);
 //		List<District> districts = getDistrictData(city);
@@ -25,7 +25,7 @@ public class Sample {
 
 	private static List<District> getDistrictData(City city) {
 		DistrictService districtService = new DistrictService();
-		districtService.createTable();
+//		districtService.createTable();
 		return districtService.GetDistrictInfo(city);
 	}
 
@@ -44,7 +44,7 @@ public class Sample {
 		List<Community> communities = communityService.selectByCity(city);
 
 		int dataLength = communityService.countPreHouseNumByCity(city);
-		int coreNum = Runtime.getRuntime().availableProcessors();
+		int coreNum = Runtime.getRuntime().availableProcessors() + 2;
 		int dataPreThread = (int) Math.round(Math.ceil(dataLength / (double) (coreNum)));
 
 		Map<Integer, Integer> indexMap = new HashMap<>();
@@ -76,7 +76,6 @@ public class Sample {
 			}
 		}
 		HouseService houseService = new HouseService();
-		houseService.createTable();
 		List<House> resList = new ArrayList<>(resMap.values());
 		int subNum = resList.size() / 100 + 1;
 		for (int i = 0; i < subNum; i++) {

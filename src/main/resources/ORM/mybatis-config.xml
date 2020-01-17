@@ -12,8 +12,11 @@
         <environment id="development">
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
-                <property name="driver" value="org.sqlite.JDBC"/>
-                <property name="url" value="jdbc:sqlite:./lianjia.db"/>
+                <property name="driver" value="org.postgresql.Driver"/>
+                <property name="url"
+                          value="jdbc:postgresql://188.131.157.4:5432/how2jdb?characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;allowMultiQueries=true&amp;useSSL=false&amp;serverTimezone=GMT%2B8"/>
+                <property name="username" value="postgres"/>
+                <property name="password" value="liukang951006"/>
             </dataSource>
         </environment>
     </environments>
