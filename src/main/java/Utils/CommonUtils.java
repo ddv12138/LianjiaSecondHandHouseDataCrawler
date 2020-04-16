@@ -71,9 +71,10 @@ public class CommonUtils {
 		assert md != null;
 		md.update(str.getBytes(StandardCharsets.UTF_8));
 		byte[] secretBytes = md.digest();
-		String md5code = new BigInteger(1, secretBytes).toString(16);
-		for (int i = 0; i < 32 - md5code.length(); i++) md5code = "0" + md5code;
-		return md5code;
+		StringBuilder md5code = new StringBuilder(new BigInteger(1, secretBytes).toString(16));
+		for (int i = 0; i < 32 - md5code.length(); i++)
+			md5code.insert(0, "0");
+		return md5code.toString();
 	}
 
 	public static String postHTTPRequest(String linkUrl) {
@@ -129,7 +130,7 @@ public class CommonUtils {
 		return null;
 	}
 
-	public static String getNormalAuthorization(HashMap dict) {
+	public static String getNormalAuthorization(HashMap<String, String> dict) {
 		String datastr = "vfkpbin1ix2rb88gfjebs0f60cbvhedlcity_id=%sgroup_type=%smax_lat=%s"
 				+ "max_lng=%smin_lat=%smin_lng=%srequest_ts=%s";
 		datastr = String.format(datastr,
@@ -159,7 +160,7 @@ public class CommonUtils {
 
 	public static boolean isCommunityInDistrict(Community community, District district) {
 		BigDecimal pointLat = new BigDecimal(community.getLatitude());
-		BigDecimal pointlng = new BigDecimal(community.getLongitude());
+		BigDecimal pointLng = new BigDecimal(community.getLongitude());
 		List<BigDecimal> lat = new LinkedList<>();
 		List<BigDecimal> lng = new LinkedList<>();
 		Optional<String> border = Optional.of(district.getBorder());
@@ -176,7 +177,7 @@ public class CommonUtils {
 
 		//初级判断
 		boolean isLatValid = pointLat.compareTo(minLat) >= 0 && pointLat.compareTo(maxLat) <= 0;
-		boolean isLngValid = pointlng.compareTo(minLng) >= 0 && pointlng.compareTo(maxLng) <= 0;
+		boolean isLngValid = pointLng.compareTo(minLng) >= 0 && pointLng.compareTo(maxLng) <= 0;
 		if (!isLatValid || !isLngValid) {
 			return false;
 		}
@@ -186,12 +187,13 @@ public class CommonUtils {
 		for (int i = 0, j = borderPoints.length - 1; i < borderPoints.length; j = i++) {
 			boolean isPointInBetween = (lat.get(i).compareTo(pointLat) > 0) != (lat.get(j).compareTo(pointLat) > 0);
 //			CommonUtils.Logger().info(lat.get(j)+"-"+lat.get(i)+"="+lat.get(j).subtract(lat.get(i)));
-			if (lat.get(j).compareTo(lat.get(i)) == 0) continue;
+			if (lat.get(j).compareTo(lat.get(i)) == 0)
+				continue;
 			boolean isCrossLine = lng.get(j).subtract(lng.get(i))
 					.multiply(pointLat.subtract(lat.get(i)))
 					.divide(
 							lat.get(j).subtract(lat.get(i))
-							, 11, RoundingMode.UP).add(lng.get(i)).compareTo(pointlng) > 0;
+							, 11, RoundingMode.UP).add(lng.get(i)).compareTo(pointLng) > 0;
 			if (isPointInBetween && isCrossLine) crossFlag = !crossFlag;
 		}
 		return crossFlag;
